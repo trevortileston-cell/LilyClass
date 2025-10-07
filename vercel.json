@@ -1,0 +1,21 @@
+{
+  "framework": null,
+  "buildCommand": "echo \"Skipping build step\"",
+  "outputDirectory": "public",
+  "functions": {
+    "api/analyze.js": {
+      "memory": 512,
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/analyze",
+      "destination": "/api/analyze"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}
