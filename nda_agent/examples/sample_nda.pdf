@@ -1,0 +1,34 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Kids [3 0 R] /Count 1 >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >> endobj
+4 0 obj << /Length 143 >> stream
+BT
+/F1 20 Tf
+72 740 Td
+(Acme NDA Placeholder) Tj
+0 -32 Td
+/F1 12 Tf
+(1. Confidentiality obligations survive for 7 years.) Tj
+0 -18 Td
+(2. Recipient must indemnify Discloser for all losses.) Tj
+0 -18 Td
+(3. Discloser may seek injunctive relief immediately.) Tj
+0 -18 Td
+(4. Governing law: Delaware. Venue: New York.) Tj
+ET
+endstream
+endobj
+5 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+xref
+0 6
+0000000000 65535 f 
+0000000010 00000 n 
+0000000061 00000 n 
+0000000112 00000 n 
+0000000243 00000 n 
+0000000333 00000 n 
+trailer << /Root 1 0 R /Size 6 >>
+startxref
+392
+%%EOF
