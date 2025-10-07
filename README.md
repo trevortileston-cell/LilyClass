@@ -24,6 +24,36 @@ LilyClass is a playful web application that helps children extend their learning
 
 > **Permissions note:** the app needs access to the device camera. Most browsers require HTTPS or `localhost` for camera access, so run locally or deploy with TLS.
 
+## Deployment
+
+The app ships as a single Node.js server with static files, so you can deploy it to any host that supports long-running Node processes. Below are two common options.
+
+### Option 1: Render/Railway/Fly.io
+
+1. Create a new **Web Service** on your provider and point it at this repository.
+2. Set the environment:
+   - **Runtime:** Node.js 18 or newer.
+   - **Build command:** `npm install` (no packages are installed, but this ensures the platform detects Node).
+   - **Start command:** `node server.js`.
+3. Add the `OPENAI_API_KEY` environment variable in the dashboard.
+4. Deploy. The provider will expose a public HTTPS URL that works with the in-browser camera.
+
+### Option 2: Vercel
+
+1. Run `npm install -g vercel` (if you don’t already have it) and log in with `vercel login`.
+2. From the project directory run `vercel --prod` and accept the detected settings:
+   - **Framework preset:** `Other`.
+   - **Build command:** `npm install`.
+   - **Output directory:** leave blank (the server handles static files).
+   - **Development command:** `node server.js`.
+3. In the Vercel dashboard, add `OPENAI_API_KEY` under **Settings → Environment Variables** and redeploy.
+
+### Using the deployed site
+
+1. Visit the deployment URL on a camera-enabled device.
+2. Allow camera permissions when prompted.
+3. Capture the learner’s work, choose a confidence level, and press **Ask Lily for advanced questions** to receive Lily’s tailored challenges.
+
 ## Environment configuration
 
 - `PORT` (optional): set a custom port for the Node.js server. Defaults to `3000`.
