@@ -1,6 +1,6 @@
 # NDA & Buyer-Profile Reviewer/Filler MVP
 
-This repository contains a Python CLI (with an optional FastAPI surface) that reviews NDAs, prompts for human approval, fills in buyer profile details, and emits a ready-to-send PDF along with an optional webhook notification.
+This repository contains a Python CLI **and** a browser-based control center (backed by FastAPI) that review NDAs, prompt for human approval, fill in buyer profile details, and emit ready-to-send PDFs along with optional webhook notifications.
 
 > ⚠️ **Disclaimers**
 >
@@ -15,7 +15,7 @@ This repository contains a Python CLI (with an optional FastAPI surface) that re
 - Explicit approval gate enforced before any document filling occurs.
 - Pull the latest buyer-profile details from Google Sheets (service-account credentials) and merge them into PDF form fields or prepend a generated cover page when forms are absent. DOCX placeholders like `{{CompanyName}}` are also replaced (DOCX→PDF conversion is a noted phase-two enhancement).
 - Emit a filled PDF/DOCX plus an optional webhook payload that can be wired to DocuSign, Zapier, or Make for downstream automation.
-- Optional FastAPI endpoints for web integrations and lightweight UI surfaces.
+- Optional FastAPI endpoints for web integrations plus a bundled control-center UI so you can operate the desktop deployment from a browser.
 - Agents SDK traces enabled automatically in the OpenAI dashboard (set `OPENAI_TRACE` env var to `1`).
 
 ## Project layout
@@ -83,7 +83,7 @@ Optional flags:
 
 During execution the CLI prints the JSON analysis, renders the markdown summary, and prompts `Approve to fill? (y/n)`. Declining stops the workflow; approving fetches the Google Sheet data, fills the PDF/DOCX, saves `{original_basename}.filled.pdf`, and calls the webhook (if configured).
 
-## Optional FastAPI surface
+## Web control center & FastAPI surface
 
 Launch the API with:
 
@@ -92,13 +92,16 @@ source .venv/bin/activate
 python app.py --web --host 0.0.0.0 --port 8000
 ```
 
-Available routes:
+Then open <http://localhost:8000/> to load the control center. Enter the API base (defaults to `http://localhost:8000`), upload or link an NDA, review the AI-generated summary, and click **Approve & fill** to merge Google Sheet data and retrieve the filled PDF. The UI keeps the mandatory disclaimers visible, enforces the approval gate, and surfaces download links once ready.
 
+### REST endpoints
+
+- `GET /healthz` – simple connectivity probe used by the UI.
 - `POST /analyze` – multipart file upload (`file`) or form field (`url`). Returns `analysis_id`, the JSON schema, and markdown.
-- `POST /fill` – form submission with `analysis_id`, `approve=true`, and optional `profile_sheet` / `profile_worksheet`. Returns a download link once filled.
+- `POST /fill` – accepts JSON or form submissions with `analysis_id`, `approve=true`, and optional `profile_sheet` / `profile_worksheet`. Returns a download link once filled.
 - `GET /downloads/{analysis_id}` – download the filled document.
 
-Remember to keep the approval checkbox wired in your UI before calling `/fill`.
+> **Tip:** If you host the frontend (e.g., on Vercel) and run the backend elsewhere, update the API base URL in the control center or set `WEB_ALLOWED_ORIGINS` to restrict CORS as needed.
 
 ## Webhook integration
 
@@ -124,7 +127,7 @@ Use Zapier/Make/DocuSign to ingest this payload. In v1 the webhook call is best-
 
 ## Testing notes
 
-Manual acceptance criteria validated via CLI:
+Manual acceptance criteria validated via CLI or web control center:
 
 1. Uploading a PDF yields JSON + markdown with multiple red flags and a score.
 2. Approving fills the document, resulting in `*.filled.pdf` with either AcroForm data or a prepended cover page if no fields exist.

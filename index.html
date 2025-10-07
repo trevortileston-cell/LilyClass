@@ -3,105 +3,414 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NDA Reviewer CLI Deployment Notice</title>
+    <title>NDA Reviewer Control Center</title>
     <style>
       :root {
         color-scheme: light dark;
       }
+      * {
+        box-sizing: border-box;
+      }
       body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         margin: 0;
-        padding: 2.5rem 1.5rem 3rem;
-        max-width: 760px;
-        line-height: 1.6;
-        font-size: 1rem;
         background: radial-gradient(circle at top, rgba(59, 130, 246, 0.08), transparent 55%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        padding: 2.5rem 1.5rem 3rem;
+        color: rgba(15, 23, 42, 0.88);
+      }
+      main {
+        width: min(960px, 100%);
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(12px);
+        border-radius: 18px;
+        padding: clamp(1.75rem, 3vw, 2.5rem);
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.16);
       }
       h1 {
-        font-size: clamp(2rem, 6vw, 2.75rem);
-        margin-bottom: 0.75rem;
+        margin-top: 0;
+        font-size: clamp(2.1rem, 4vw, 2.9rem);
       }
-      .card {
-        background: rgba(255, 255, 255, 0.82);
-        color: inherit;
-        border-radius: 16px;
-        padding: 1.75rem;
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
-        backdrop-filter: blur(16px);
+      h2 {
+        margin-top: 2rem;
+        font-size: clamp(1.3rem, 3.6vw, 1.75rem);
       }
-      ul {
-        padding-left: 1.3rem;
+      p {
+        margin: 0.65rem 0;
+        line-height: 1.6;
       }
-      code {
-        background-color: rgba(15, 23, 42, 0.08);
-        border-radius: 6px;
-        padding: 0.15rem 0.35rem;
-        font-size: 0.95rem;
+      label {
+        display: block;
+        margin-bottom: 0.45rem;
+        font-weight: 600;
+      }
+      input[type="text"],
+      input[type="url"],
+      input[type="file"],
+      textarea,
+      select {
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid rgba(15, 23, 42, 0.2);
+        padding: 0.75rem 0.85rem;
+        font-size: 1rem;
+        font-family: inherit;
+        background: rgba(248, 250, 252, 0.8);
+      }
+      textarea {
+        min-height: 150px;
+        resize: vertical;
+        white-space: pre-wrap;
+      }
+      button {
+        border: none;
+        border-radius: 999px;
+        padding: 0.75rem 1.6rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: linear-gradient(135deg, #2563eb, #4f46e5);
+        color: white;
+        box-shadow: 0 12px 25px rgba(79, 70, 229, 0.3);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        box-shadow: none;
+      }
+      button:not(:disabled):hover {
+        transform: translateY(-1px);
+        box-shadow: 0 16px 32px rgba(37, 99, 235, 0.28);
+      }
+      .stack {
+        display: grid;
+        gap: clamp(1.25rem, 2.5vw, 1.75rem);
+      }
+      .grid-two {
+        display: grid;
+        gap: 1.25rem;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       }
       .badge {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 0.95rem;
+        border-radius: 999px;
+        font-weight: 600;
         background: rgba(37, 99, 235, 0.14);
         color: #1d4ed8;
-        border-radius: 999px;
-        padding: 0.3rem 0.9rem;
+        margin-bottom: 1rem;
+      }
+      .disclaimer {
+        background: rgba(253, 230, 138, 0.45);
+        border: 1px solid rgba(217, 119, 6, 0.32);
+        border-radius: 14px;
+        padding: 1.1rem 1.3rem;
+        color: #92400e;
         font-weight: 600;
-        margin-bottom: 1.4rem;
+        line-height: 1.6;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 16px;
+        padding: 1.4rem 1.5rem;
+        border: 1px solid rgba(148, 163, 184, 0.35);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      }
+      .status {
+        margin-top: 0.75rem;
+        font-size: 0.95rem;
+        color: rgba(15, 23, 42, 0.72);
+      }
+      .status strong {
+        color: rgba(37, 99, 235, 1);
+      }
+      pre.json-output {
+        max-height: 260px;
+        overflow: auto;
+        background: rgba(15, 23, 42, 0.85);
+        color: #f8fafc;
+        padding: 1rem;
+        border-radius: 12px;
+        font-size: 0.9rem;
+      }
+      pre.markdown-output {
+        background: rgba(248, 250, 252, 0.9);
+        border-radius: 12px;
+        padding: 1rem;
+        font-size: 0.95rem;
+        max-height: 260px;
+        overflow: auto;
+        white-space: pre-wrap;
+      }
+      .hidden {
+        display: none !important;
       }
       footer {
-        margin-top: 2rem;
+        margin-top: 2.5rem;
         font-size: 0.9rem;
-        color: rgba(15, 23, 42, 0.68);
+        color: rgba(71, 85, 105, 0.9);
+        text-align: center;
+      }
+      a.button-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.6rem;
+        border-radius: 999px;
+        border: none;
+        text-decoration: none;
+        font-weight: 600;
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        color: white;
+        margin-top: 0.75rem;
+        box-shadow: 0 12px 25px rgba(22, 163, 74, 0.28);
       }
     </style>
   </head>
   <body>
-    <main class="card">
-      <div class="badge">Heads up</div>
-      <h1>Run the NDA Reviewer locally</h1>
+    <main>
+      <div class="badge">NDA Reviewer Control Center</div>
+      <h1>Operate the desktop deployment from the web</h1>
       <p>
-        This repository ships a Python-based NDA review workflow that is designed to
-        run from the command line (with an optional FastAPI surface). The Vercel
-        preview you are viewing is a static notice so that deployments do not show a
-        blank screen.
+        Launch the Python FastAPI backend (<code>python app.py --web</code>) on your desktop
+        and use this interface to upload agreements, review the AI summary, approve the
+        fill step, and download the completed package without leaving your browser.
       </p>
-      <h2>Why nothing loads automatically</h2>
-      <p>
-        The reviewer coordinates file uploads, OpenAI Agents analysis, Google Sheets
-        profile retrieval, PDF filling, and webhook calls. Those integrations
-        require local credentials and are intentionally not executed on Vercel's
-        serverless preview environment.
-      </p>
-      <h2>Try it yourself</h2>
-      <ol>
-        <li>Clone this repo and create a virtual environment.</li>
-        <li>Fill in <code>.env</code> (see <code>.env.example</code> for keys).</li>
-        <li>Install dependencies with <code>pip install -r requirements.txt</code>.</li>
-        <li>
-          Run the CLI: <code>python app.py --file ./examples/sample_nda.pdf</code>
-          and follow the prompts.
-        </li>
-      </ol>
-      <p>
-        Prefer a browser? Launch the FastAPI variant locally with
-        <code>python app.py --web</code> and point your browser to
-        <code>http://localhost:8000/docs</code>.
-      </p>
-      <h2>Important disclaimers</h2>
-      <ul>
-        <li>
-          This tool provides an AI-assisted review; it is not legal advice. Always
-          consult counsel for material agreements.
-        </li>
-        <li>No signing or submission occurs without explicit approval.</li>
-        <li>
-          Documents and profile data are handled locally; rotate keys &amp; restrict
-          access.
-        </li>
-      </ul>
+      <section class="disclaimer">
+        ⚠️ This tool provides an AI-assisted review; it is not legal advice. Always consult
+        counsel for material agreements. No signing or submission occurs without explicit
+        approval. Documents and profile data are handled locally; rotate keys and restrict access.
+      </section>
+      <section class="card stack" style="margin-top: 1.75rem;">
+        <h2>1. Connect to your running backend</h2>
+        <p>
+          The control center relays actions to the FastAPI server that runs on your desktop or
+          another secure host. Update the API base URL if you are accessing the backend remotely.
+        </p>
+        <div class="grid-two">
+          <div>
+            <label for="api-base-input">API base URL</label>
+            <input id="api-base-input" type="text" placeholder="http://localhost:8000" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button id="save-api-base" type="button">Save connection</button>
+          </div>
+        </div>
+        <p class="status" id="connection-status">Awaiting connection test…</p>
+      </section>
+      <section class="card stack">
+        <h2>2. Submit a document for review</h2>
+        <p>
+          Upload a PDF/DOCX or provide a public URL. The backend will call OpenAI Agents with
+          file search enabled and return both the structured JSON and a human-friendly summary.
+        </p>
+        <div class="grid-two">
+          <div>
+            <label for="file-input">Upload NDA (PDF/DOCX)</label>
+            <input id="file-input" type="file" accept=".pdf,.doc,.docx" />
+          </div>
+          <div>
+            <label for="url-input">…or fetch from URL</label>
+            <input id="url-input" type="url" placeholder="https://example.com/nda.pdf" />
+          </div>
+        </div>
+        <button id="analyze-btn" type="button">Analyze document</button>
+        <p class="status" id="analyze-status"></p>
+        <div id="analysis-output" class="hidden">
+          <h3>AI Analysis (JSON)</h3>
+          <pre class="json-output" id="analysis-json"></pre>
+          <h3>Markdown report</h3>
+          <pre class="markdown-output" id="analysis-markdown"></pre>
+        </div>
+      </section>
+      <section class="card stack">
+        <h2>3. Approve and fill with buyer profile</h2>
+        <p>
+          The fill step is blocked unless you explicitly approve. Configure your Google Sheet
+          identifiers if they differ from the defaults in your <code>.env</code> file.
+        </p>
+        <div class="grid-two">
+          <div>
+            <label for="sheet-input">Google Sheet ID (optional override)</label>
+            <input id="sheet-input" type="text" placeholder="Leave blank to use env" />
+          </div>
+          <div>
+            <label for="worksheet-input">Worksheet name (optional)</label>
+            <input id="worksheet-input" type="text" placeholder="Defaults to first worksheet" />
+          </div>
+        </div>
+        <button id="fill-btn" type="button" disabled>Approve &amp; fill</button>
+        <p class="status" id="fill-status"></p>
+        <div id="download-area" class="hidden">
+          <h3>Filled package ready</h3>
+          <a id="download-link" class="button-link" href="#" download>Download filled PDF</a>
+        </div>
+      </section>
       <footer>
-        Need to adapt this for hosted use? Wire a secure backend that can store and
-        protect your OpenAI, Google, and webhook credentials before redeploying.
+        Phase-two ideas: integrate DocuSign/Adobe Sign APIs instead of the webhook stub, enable
+        Computer Use tool for external buyer portals (with caution), and explore MCP connectors
+        for managed Google Workspace/Dropbox access.
       </footer>
     </main>
+    <script>
+      const storageKey = "nda-reviewer-api-base";
+      const apiBaseInput = document.getElementById("api-base-input");
+      const saveApiBaseButton = document.getElementById("save-api-base");
+      const connectionStatus = document.getElementById("connection-status");
+      const fileInput = document.getElementById("file-input");
+      const urlInput = document.getElementById("url-input");
+      const analyzeButton = document.getElementById("analyze-btn");
+      const analyzeStatus = document.getElementById("analyze-status");
+      const analysisOutput = document.getElementById("analysis-output");
+      const analysisJson = document.getElementById("analysis-json");
+      const analysisMarkdown = document.getElementById("analysis-markdown");
+      const fillButton = document.getElementById("fill-btn");
+      const fillStatus = document.getElementById("fill-status");
+      const sheetInput = document.getElementById("sheet-input");
+      const worksheetInput = document.getElementById("worksheet-input");
+      const downloadArea = document.getElementById("download-area");
+      const downloadLink = document.getElementById("download-link");
+
+      let lastAnalysisId = null;
+
+      function getApiBase() {
+        return apiBaseInput.value.trim();
+      }
+
+      function setStatus(element, message, tone = "info") {
+        element.textContent = message;
+        element.style.color = tone === "error" ? "#b91c1c" : "rgba(15, 23, 42, 0.72)";
+      }
+
+      function boolFromValue(value) {
+        if (typeof value === "boolean") return value;
+        if (typeof value === "string") {
+          return ["true", "1", "yes", "y", "on"].includes(value.toLowerCase());
+        }
+        return false;
+      }
+
+      async function checkConnection(base) {
+        connectionStatus.textContent = "Checking connectivity…";
+        try {
+          const response = await fetch(`${base}/healthz`, { method: "GET", mode: "cors" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const payload = await response.json();
+          connectionStatus.innerHTML = `Connected to <strong>${payload.name}</strong> \u2013 ready to review documents.`;
+          connectionStatus.style.color = "#15803d";
+        } catch (error) {
+          connectionStatus.innerHTML = `Unable to reach backend at <strong>${base}</strong>. Start the FastAPI server (python app.py --web) and expose it if needed.`;
+          connectionStatus.style.color = "#b91c1c";
+        }
+      }
+
+      function persistBase() {
+        const base = getApiBase();
+        localStorage.setItem(storageKey, base);
+        checkConnection(base);
+      }
+
+      async function analyzeDocument() {
+        const base = getApiBase();
+        if (!base) {
+          setStatus(analyzeStatus, "Please configure the API base URL first.", "error");
+          return;
+        }
+
+        const file = fileInput.files[0];
+        const url = urlInput.value.trim();
+        if (!file && !url) {
+          setStatus(analyzeStatus, "Select a file or enter a URL to analyze.", "error");
+          return;
+        }
+
+        const form = new FormData();
+        if (file) form.append("file", file);
+        if (url) form.append("url", url);
+
+        setStatus(analyzeStatus, "Uploading for analysis…");
+        analyzeButton.disabled = true;
+        fillButton.disabled = true;
+        downloadArea.classList.add("hidden");
+        analysisOutput.classList.add("hidden");
+        lastAnalysisId = null;
+
+        try {
+          const response = await fetch(`${base}/analyze`, {
+            method: "POST",
+            body: form,
+          });
+          if (!response.ok) {
+            const detail = await response.text();
+            throw new Error(detail || `HTTP ${response.status}`);
+          }
+          const payload = await response.json();
+          lastAnalysisId = payload.analysis_id;
+          analysisJson.textContent = JSON.stringify(payload.analysis, null, 2);
+          analysisMarkdown.textContent = payload.markdown;
+          analysisOutput.classList.remove("hidden");
+          fillButton.disabled = false;
+          setStatus(analyzeStatus, "Analysis ready. Review the findings, then approve when ready.");
+        } catch (error) {
+          console.error(error);
+          setStatus(analyzeStatus, `Analysis failed: ${error.message}`, "error");
+        } finally {
+          analyzeButton.disabled = false;
+        }
+      }
+
+      async function fillDocument() {
+        if (!lastAnalysisId) {
+          setStatus(fillStatus, "Run an analysis before filling.", "error");
+          return;
+        }
+        const base = getApiBase();
+        setStatus(fillStatus, "Filling PDF with profile data…");
+        fillButton.disabled = true;
+
+        const payload = {
+          analysis_id: lastAnalysisId,
+          approve: true,
+        };
+        if (sheetInput.value.trim()) payload.profile_sheet = sheetInput.value.trim();
+        if (worksheetInput.value.trim()) payload.profile_worksheet = worksheetInput.value.trim();
+
+        try {
+          const response = await fetch(`${base}/fill`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (!response.ok) {
+            const detail = await response.text();
+            throw new Error(detail || `HTTP ${response.status}`);
+          }
+          const body = await response.json();
+          const link = new URL(body.download_url, base);
+          downloadLink.href = link.toString();
+          downloadArea.classList.remove("hidden");
+          setStatus(fillStatus, "Filled document generated. Download and review before sending.");
+        } catch (error) {
+          console.error(error);
+          setStatus(fillStatus, `Fill failed: ${error.message}`, "error");
+          fillButton.disabled = false;
+          return;
+        }
+      }
+
+      saveApiBaseButton.addEventListener("click", persistBase);
+      analyzeButton.addEventListener("click", analyzeDocument);
+      fillButton.addEventListener("click", fillDocument);
+
+      const savedBase = localStorage.getItem(storageKey) || window.location.origin;
+      apiBaseInput.value = savedBase;
+      checkConnection(savedBase);
+    </script>
   </body>
 </html>
