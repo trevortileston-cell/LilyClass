@@ -41,12 +41,8 @@ The app ships as a single Node.js server with static files, so you can deploy it
 ### Option 2: Vercel
 
 1. Run `npm install -g vercel` (if you don’t already have it) and log in with `vercel login`.
-2. From the project directory run `vercel --prod` and accept the detected settings:
-   - **Framework preset:** `Other`.
-   - **Build command:** `npm install`.
-   - **Output directory:** leave blank (the server handles static files).
-   - **Development command:** `node server.js`.
-3. In the Vercel dashboard, add `OPENAI_API_KEY` under **Settings → Environment Variables** and redeploy.
+2. From the project directory run `vercel --prod`. The included `vercel.json` routes `/api/analyze` to a serverless function and serves everything in `public/`, so you can accept the default “Other” framework preset without supplying build/output commands.
+3. In the Vercel dashboard, add `OPENAI_API_KEY` under **Settings → Environment Variables** (Production scope) and redeploy.
 
 ### Using the deployed site
 
@@ -64,7 +60,7 @@ The app ships as a single Node.js server with static files, so you can deploy it
 1. The browser requests camera access and displays a live preview.
 2. When the child captures a snapshot, it is converted to a base64 string and kept client-side.
 3. Tapping **Ask Lily for advanced questions** sends the encoded image and chosen confidence level to `/api/analyze`.
-4. The Node.js server forwards the information to OpenAI's Responses API and extracts the text output.
+4. The Node.js server (or the Vercel serverless function) forwards the information to OpenAI's Responses API and extracts the text output.
 5. Lily's response – a celebration plus three advanced questions with hints – is rendered back in the results panel.
 
 If the OpenAI call fails, the UI displays a gentle error card with guidance to try again with adult help.
@@ -73,7 +69,7 @@ If the OpenAI call fails, the UI displays a gentle error card with guidance to t
 
 - The server is dependency-free and relies on Node's built-in `http` module, making it easy to deploy.
 - Static assets live in `public/`. Adjust the layout or behavior by editing `public/styles.css` and `public/app.js`.
-- To customize Lily's tutoring style, tweak the prompt in `server.js` inside the `tutoringPrompt` array.
+- To customize Lily's tutoring style, tweak the prompt in `lib/analyze.js` inside the `tutoringPrompt` array.
 
 ## Accessibility and privacy
 
