@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Social Skills Adventure Camp</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>Social Skills Adventure Camp</h1>
+      <p class="tagline">Build confidence with real world practice, one mission at a time!</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-text">
+        <h2>Choose a mission and practice the skills to shine in real life.</h2>
+        <p>
+          Every activity was created with teachers, counselors, and families in mind. Work through the
+          guided modules, practice with quick conversations, and complete real-world missions you can try
+          at school, home, or in your neighborhood.
+        </p>
+        <button id="dailyMissionBtn" class="primary-btn">Show today's real world mission</button>
+        <p id="dailyMission" class="mission-text" aria-live="polite"></p>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="badge">Coach Approved</div>
+        <div class="scene">
+          <div class="sun"></div>
+          <div class="hill hill-left"></div>
+          <div class="hill hill-right"></div>
+          <div class="campfire"></div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="module-title" class="module-section">
+      <h2 id="module-title">Choose your training path</h2>
+      <p class="section-intro">
+        Work through the structured modules to build strong habits. Each module ends with a real-world
+        activity you can try today.
+      </p>
+      <div id="moduleGrid" class="module-grid" role="list"></div>
+    </section>
+
+    <section aria-labelledby="scenario-title" class="scenario-section">
+      <div class="section-header">
+        <div>
+          <h2 id="scenario-title">Interactive conversation coach</h2>
+          <p>Pick a real-life situation and practice what you could say. Choose the option that fits best.</p>
+        </div>
+        <label class="scenario-picker">
+          <span class="picker-label">Practice scenario:</span>
+          <select id="scenarioSelect" aria-describedby="scenario-title"></select>
+        </label>
+      </div>
+
+      <div id="scenarioDetails" class="scenario-details" aria-live="polite"></div>
+    </section>
+
+    <section aria-labelledby="reflection-title" class="reflection-section">
+      <h2 id="reflection-title">Reflection journal</h2>
+      <p>
+        After you try a mission, write down what happened. Your journal saves on this device so you can
+        look back on your progress any time.
+      </p>
+      <textarea id="reflectionInput" rows="6" placeholder="Describe what you tried, how it felt, and what you might do next time..."></textarea>
+      <div class="reflection-actions">
+        <button id="saveReflection" class="primary-btn">Save reflection</button>
+        <span id="saveStatus" role="status" aria-live="polite"></span>
+      </div>
+      <ul id="reflectionList" class="reflection-list"></ul>
+    </section>
+
+    <section aria-labelledby="progress-title" class="progress-section">
+      <h2 id="progress-title">Progress board</h2>
+      <div class="progress-cards">
+        <article class="progress-card">
+          <h3>Conversations completed</h3>
+          <p id="conversationCount" class="progress-number">0</p>
+          <p class="card-note">Each successful choice earns a badge. Aim for three badges a day!</p>
+        </article>
+        <article class="progress-card">
+          <h3>Weekly real world actions</h3>
+          <p id="missionCount" class="progress-number">0</p>
+          <p class="card-note">Check off each mission you complete in real life.</p>
+          <div id="missionChecklist" class="mission-checklist"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Created with care for families, teachers, and amazing kids.</p>
+  </footer>
+
+  <script src="script.js" type="module"></script>
+</body>
+</html>
