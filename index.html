@@ -3,103 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Social Skills Adventure Camp</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>Acquisition NDA Review Assistant</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
-    <div class="container">
-      <h1>Social Skills Adventure Camp</h1>
-      <p class="tagline">Build confidence with real world practice, one mission at a time!</p>
+    <div class="header-content container">
+      <div>
+        <h1>Acquisition NDA Review Assistant</h1>
+        <p class="lead">Upload or link NDAs, buyer profiles, and other deal documents for instant issue spotting, summaries, and ready-to-sign packets.</p>
+      </div>
+      <div class="status-pill" id="profileStatus" role="status" aria-live="polite">Profile not saved</div>
     </div>
   </header>
 
   <main class="container">
-    <section class="hero">
-      <div class="hero-text">
-        <h2>Choose a mission and practice the skills to shine in real life.</h2>
-        <p>
-          Every activity was created with teachers, counselors, and families in mind. Work through the
-          guided modules, practice with quick conversations, and complete real-world missions you can try
-          at school, home, or in your neighborhood.
-        </p>
-        <button id="dailyMissionBtn" class="primary-btn">Show today's real world mission</button>
-        <p id="dailyMission" class="mission-text" aria-live="polite"></p>
-      </div>
-      <div class="hero-visual" aria-hidden="true">
-        <div class="badge">Coach Approved</div>
-        <div class="scene">
-          <div class="sun"></div>
-          <div class="hill hill-left"></div>
-          <div class="hill hill-right"></div>
-          <div class="campfire"></div>
-        </div>
-      </div>
-    </section>
-
-    <section aria-labelledby="module-title" class="module-section">
-      <h2 id="module-title">Choose your training path</h2>
-      <p class="section-intro">
-        Work through the structured modules to build strong habits. Each module ends with a real-world
-        activity you can try today.
-      </p>
-      <div id="moduleGrid" class="module-grid" role="list"></div>
-    </section>
-
-    <section aria-labelledby="scenario-title" class="scenario-section">
-      <div class="section-header">
+    <section class="card" aria-labelledby="profile-title">
+      <div class="card-header">
         <div>
-          <h2 id="scenario-title">Interactive conversation coach</h2>
-          <p>Pick a real-life situation and practice what you could say. Choose the option that fits best.</p>
+          <h2 id="profile-title">Deal team profile</h2>
+          <p>Provide the details, initials, and signature block we will re-use when preparing documents.</p>
         </div>
-        <label class="scenario-picker">
-          <span class="picker-label">Practice scenario:</span>
-          <select id="scenarioSelect" aria-describedby="scenario-title"></select>
+        <div class="card-actions">
+          <button class="ghost-btn" id="clearProfile">Clear profile</button>
+          <button class="primary-btn" id="saveProfile">Save profile</button>
+        </div>
+      </div>
+      <form class="profile-grid" id="profileForm">
+        <label>
+          <span>Full name</span>
+          <input type="text" id="profileName" name="name" autocomplete="name" required />
+        </label>
+        <label>
+          <span>Role / Title</span>
+          <input type="text" id="profileTitle" name="title" />
+        </label>
+        <label>
+          <span>Company</span>
+          <input type="text" id="profileCompany" name="company" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" id="profileEmail" name="email" autocomplete="email" />
+        </label>
+        <label>
+          <span>Phone</span>
+          <input type="tel" id="profilePhone" name="phone" autocomplete="tel" />
+        </label>
+        <label class="wide">
+          <span>Deal focus / notes</span>
+          <textarea id="profileNotes" name="notes" rows="2" placeholder="Example: SMB SaaS acquisitions, up to $15M revenue"></textarea>
+        </label>
+        <label>
+          <span>Initials block</span>
+          <input type="text" id="profileInitials" name="initials" maxlength="6" placeholder="AB" />
+        </label>
+        <div class="signature-field">
+          <span>Signature (draw or sign)</span>
+          <canvas id="signaturePad" width="520" height="160" aria-label="Signature pad"></canvas>
+          <div class="signature-actions">
+            <button type="button" class="ghost-btn" id="clearSignature">Clear signature</button>
+            <label class="upload-signature">
+              <span>Upload signature image</span>
+              <input type="file" id="signatureUpload" accept="image/*" />
+            </label>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="intake-title">
+      <div class="card-header">
+        <div>
+          <h2 id="intake-title">Document intake</h2>
+          <p>Paste share links to NDAs, LOIs, or data room files, or upload PDFs directly. We will review each document.</p>
+        </div>
+      </div>
+      <div class="intake-grid">
+        <label class="wide">
+          <span>Document links (one per line)</span>
+          <textarea id="documentLinks" rows="4" placeholder="https://example.com/nda.pdf"></textarea>
+        </label>
+        <label class="upload-area">
+          <span>Upload files</span>
+          <input type="file" id="documentFiles" accept=".pdf,.txt,.doc,.docx,.md,.rtf" multiple />
+          <p class="hint">PDFs are parsed automatically. Other text-based formats are read as plain text.</p>
         </label>
       </div>
-
-      <div id="scenarioDetails" class="scenario-details" aria-live="polite"></div>
-    </section>
-
-    <section aria-labelledby="reflection-title" class="reflection-section">
-      <h2 id="reflection-title">Reflection journal</h2>
-      <p>
-        After you try a mission, write down what happened. Your journal saves on this device so you can
-        look back on your progress any time.
-      </p>
-      <textarea id="reflectionInput" rows="6" placeholder="Describe what you tried, how it felt, and what you might do next time..."></textarea>
-      <div class="reflection-actions">
-        <button id="saveReflection" class="primary-btn">Save reflection</button>
-        <span id="saveStatus" role="status" aria-live="polite"></span>
+      <div class="card-actions">
+        <button class="secondary-btn" id="reviewDocuments">Review documents</button>
+        <div class="progress-indicator" id="reviewStatus" role="status" aria-live="polite"></div>
       </div>
-      <ul id="reflectionList" class="reflection-list"></ul>
     </section>
 
-    <section aria-labelledby="progress-title" class="progress-section">
-      <h2 id="progress-title">Progress board</h2>
-      <div class="progress-cards">
-        <article class="progress-card">
-          <h3>Conversations completed</h3>
-          <p id="conversationCount" class="progress-number">0</p>
-          <p class="card-note">Each successful choice earns a badge. Aim for three badges a day!</p>
-        </article>
-        <article class="progress-card">
-          <h3>Weekly real world actions</h3>
-          <p id="missionCount" class="progress-number">0</p>
-          <p class="card-note">Check off each mission you complete in real life.</p>
-          <div id="missionChecklist" class="mission-checklist"></div>
-        </article>
+    <section class="card" aria-labelledby="results-title">
+      <div class="card-header">
+        <div>
+          <h2 id="results-title">Findings &amp; summaries</h2>
+          <p>We highlight potential legal issues, missing data, and action items for each document.</p>
+        </div>
+      </div>
+      <div id="resultsContainer" class="results-grid" aria-live="polite"></div>
+      <div class="next-steps" id="nextSteps" hidden>
+        <p>Ready to move forward with the populated agreements?</p>
+        <div class="card-actions">
+          <button class="ghost-btn" id="rerunReview">Run another review</button>
+          <button class="primary-btn" id="proceedToPacket">Yes, prepare documents</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="packet-title" id="packetSection" hidden>
+      <div class="card-header">
+        <div>
+          <h2 id="packet-title">Complete &amp; download packet</h2>
+          <p>We combine your profile details, document summaries, and signature blocks into a ready-to-share PDF packet.</p>
+        </div>
+      </div>
+      <div class="packet-body">
+        <div class="packet-summary">
+          <h3>Included documents</h3>
+          <ul id="packetDocumentList"></ul>
+        </div>
+        <div class="packet-actions">
+          <label>
+            <span>Closing date</span>
+            <input type="date" id="closingDate" />
+          </label>
+          <label>
+            <span>Signing location</span>
+            <input type="text" id="signingLocation" placeholder="City, State" />
+          </label>
+          <button class="primary-btn" id="downloadPacket">Download completed packet</button>
+          <p class="hint">Packet includes summaries, flagged issues, and your saved signature and initials.</p>
+        </div>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
-    <p>Created with care for families, teachers, and amazing kids.</p>
+    <p>&copy; <span id="year"></span> Acquisition NDA Review Assistant. Not legal advice—consult qualified counsel for final review.</p>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.111/pdf.min.js" integrity="sha512-LYpT0KqFDMZXKGpp9Eh9RnMhQlxhQoGKYeDIebS32dawurB1IIEcmBwC/p7Qr+3N26nDTNGb59qsJ+QZAHObbQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.111/pdf.worker.min.js" integrity="sha512-QzEnI/f7jSyLpujDSFziqZFj2wz9tkz1krrcfNL2rqy3XfMLJfZGPeiQyjGY/nmlDEcYAwxXZJivWXcDM1z6bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-FT1NWxzaO+F6DRKCVh0b07XHkVnaH3kspXdgPdf0lpzthC/3Jl0uhvR48gtLEIKY9JmNv2DCwSGJjsOexDr+hQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="script.js" type="module"></script>
 </body>
 </html>
