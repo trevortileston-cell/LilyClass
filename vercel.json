@@ -1,31 +1,21 @@
 {
+  "framework": null,
+  "buildCommand": "echo \"Skipping build step\"",
+  "outputDirectory": "public",
   "functions": {
     "api/analyze.js": {
       "memory": 512,
       "maxDuration": 10
     }
   },
-  "builds": [
+  "rewrites": [
     {
-      "src": "public/**/*",
-      "use": "@vercel/static"
+      "source": "/api/analyze",
+      "destination": "/api/analyze"
     },
     {
-      "src": "api/analyze.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/analyze",
-      "dest": "/api/analyze.js"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }

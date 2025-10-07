@@ -41,9 +41,9 @@ The app ships as a single Node.js server with static files, so you can deploy it
 ### Option 2: Vercel
 
 1. Run `npm install -g vercel` (if you don’t already have it) and log in with `vercel login`.
-2. From the project directory run `vercel --prod`. The included `vercel.json` config deploys the static assets from `public/` and wires `/api/analyze` to the serverless function, so you can accept the default “Other” framework preset without supplying build/output commands. Earlier revisions rewrote routes to `/public/index.html`, which does not exist once Vercel publishes the `public/` folder at the deployment root. The current configuration rewrites to `/index.html`, which resolves the `404: NOT_FOUND` errors that surfaced on previous deployments.
+2. From the project directory run `vercel --prod`. The included `vercel.json` config now opts into Vercel’s “Other” framework with an explicit `outputDirectory` of `public`, so the platform promotes everything in `public/` (including `index.html`, `app.js`, and `styles.css`) to the deployment root during the build-free deploy. You can accept the default prompts without defining custom build/output commands.
 3. In the Vercel dashboard, add `OPENAI_API_KEY` under **Settings → Environment Variables** (Production scope) and redeploy.
-4. If you ran an earlier deployment, trigger a fresh redeploy after pulling the latest `vercel.json`. The previous configuration could return a `404: NOT_FOUND` page because Vercel didn’t know to publish the static files.
+4. If you ran an earlier deployment, trigger a fresh redeploy after pulling the latest `vercel.json`. The previous configuration relied on the legacy static builder and could intermittently return a `404: NOT_FOUND` page when the glob pattern failed to attach the static assets. The new settings ensure Vercel consistently serves the SPA shell while still routing `/api/analyze` to the serverless function.
 
 ### Using the deployed site
 
