@@ -41,8 +41,9 @@ The app ships as a single Node.js server with static files, so you can deploy it
 ### Option 2: Vercel
 
 1. Run `npm install -g vercel` (if you don’t already have it) and log in with `vercel login`.
-2. From the project directory run `vercel --prod`. The included `vercel.json` routes `/api/analyze` to a serverless function and serves everything in `public/`, so you can accept the default “Other” framework preset without supplying build/output commands.
+2. From the project directory run `vercel --prod`. The included `vercel.json` config deploys the static assets from `public/` and wires `/api/analyze` to the serverless function, so you can accept the default “Other” framework preset without supplying build/output commands.
 3. In the Vercel dashboard, add `OPENAI_API_KEY` under **Settings → Environment Variables** (Production scope) and redeploy.
+4. If you ran an earlier deployment, trigger a fresh redeploy after pulling the latest `vercel.json`. The previous configuration could return a `404: NOT_FOUND` page because Vercel didn’t know to publish the static files.
 
 ### Using the deployed site
 
