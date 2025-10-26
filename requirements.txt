@@ -1,0 +1,11 @@
+openai
+openai-agents
+gspread
+google-auth
+pypdf
+pdfplumber
+python-docx
+requests
+python-dotenv
+fastapi
+uvicorn
